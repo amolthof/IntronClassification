@@ -2,31 +2,10 @@
 
 The purpose of this bash script is to extract splice sites from all annotated introns.  
 
-*It is assumed that the FASTQ reads have been checked for quality. Any filtering, adapter trimming etc. that might be required should be done prior to running this script.*
-
 Dependencies:
 
-Hisat2: https://daehwankimlab.github.io/hisat2/ <br>
-
+awk: https://www.gnu.org/software/gawk/gawk.html <br>
 ___
-**Set FASTQ, FASTA and output directory**
-
-    fastqdir="/path/to/my/fastq_directory"
-    fastadir="/path/to/my/fasta_directory"
-    workdir="/path/to/my/working_directory"
-    aligndir="${workdir}/SAM_Files"
-    mkdir -p ${fastqdir}
-    mkdir -p ${fastadir}
-    mkdir -p ${aligndir}
-
-**Provide sample information**
-
-    sample="WT"
-    organism="Homo_sapiens"
-
-**Set number of threads to be used. This is done to speed things up**
-
-    threads=16
 
 **Set inputs: working directory, source directory, source path name, list of species in source**
 
