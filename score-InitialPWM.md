@@ -11,13 +11,13 @@
 
 ***Score U2 donor site***
 
-# Extract major 5'ss nucleotide positions from -2 to +6 for scoring
+	# Extract major 5'ss nucleotide positions from -2 to +6 for scoring
 
 	PWM=${workdir}/PWMs/Initial/${numSpecies}_Species-U2_DonorSite_LOD.tsv
 
 	awk -F"\t" -v OFS="\t" '{print (substr($2,2,1)),(substr($2,3,1)),(substr($2,4,1)),(substr($2,5,1)),(substr($2,6,1)),(substr($2,7,1)),(substr($2,8,1)),(substr($2,9,1)),$1}' ${INPUT} > ${workdir}/output/${species}/U2_DonorSite.tmp
 
-# Assign LOD for each nucleotide at each position
+	# Assign LOD for each nucleotide at each position
 
 	for Pos in {1..8}; do
 		for N in A C G T; do
@@ -27,7 +27,7 @@
 		done 
 	done
 
-# Score each position, sum LOD score
+	# Score each position, sum LOD score
 
 	awk -F"\t" -v OFS="\t" '{X1=$1; X2=$2; X3=$3; X4=$4; X5=$5; X6=$6; X7=$7; X8=$8}
 		{if (X1=="A") Y1='${A1}'; else if (X1=="C") Y1='${C1}'; else if (X1=="G") Y1='${G1}'; else if (X1=="T") Y1='${T1}'}
@@ -41,7 +41,7 @@
 		
 		{mean=(Y1+Y2+Y3+Y4+Y5+Y6+Y7+Y8)/8; var=((Y1-mean)**2+(Y2-mean)**2+(Y3-mean)**2+(Y4-mean)**2+(Y5-mean)**2+(Y6-mean)**2+(Y7-mean)**2+(Y8-mean)**2)/8} {print $NF,$1$2$3$4$5$6$7$8,Y1+Y2+Y3+Y4+Y5+Y6+Y7+Y8,mean,var}' ${workdir}/output/${species}/U2_DonorSite.tmp > ${workdir}/output/${species}/U2_DonorSite_scored.tmp
 
-# Scale scores
+	# Scale scores
 
 	max=`awk -F"\t" '{max=0; for (i=1;i<=NF;i++) {if (max<$i) max=$i}; print max}' ${PWM} | awk 'BEGIN {sum=0} {sum+=$1} END {print sum}'`
 	min=`awk -F"\t" '{min=0; for (i=1;i<=NF;i++) {if (min>$i) min=$i}; print min}' ${PWM} | awk 'BEGIN {sum=0} {sum+=$1} END {print sum}'`
@@ -50,13 +50,13 @@
 
 ***Score U12 donor site***
 
-# Extract minor 5'ss nucleotide positions from +4 to +9 for scoring
+	# Extract minor 5'ss nucleotide positions from +4 to +9 for scoring
 
 	awk -F"\t" -v OFS="\t" '{print (substr($2,7,1)),(substr($2,8,1)),(substr($2,9,1)),(substr($2,10,1)),(substr($2,11,1)),(substr($2,12,1)),$1}' ${INPUT} > ${workdir}/output/${species}/U12_DonorSite.tmp
 
 	PWM=${workdir}/PWMs/Initial/${numSpecies}_Species-U12_DonorSite_LOD.tsv
 
-# Assign LOD for each nucleotide at each position
+	# Assign LOD for each nucleotide at each position
 
 	for Pos in {1..6}; do
 		for N in A C G T; do
@@ -66,7 +66,7 @@
 		done 
 	done
 
-# Score each position, sum LOD score
+	# Score each position, sum LOD score
 
 	awk -F"\t" -v OFS="\t" '{X1=$1; X2=$2; X3=$3; X4=$4; X5=$5; X6=$6}
 		{if (X1=="A") Y1='${A1}'; else if (X1=="C") Y1='${C1}'; else if (X1=="G") Y1='${G1}'; else if (X1=="T") Y1='${T1}'}
@@ -78,7 +78,7 @@
 
 		{mean=(Y1+Y2+Y3+Y4+Y5+Y6)/6; var=((Y1-mean)**2+(Y2-mean)**2+(Y3-mean)**2+(Y4-mean)**2+(Y5-mean)**2+(Y6-mean)**2)/6} {print $NF,$1$2$3$4$5$6,Y1+Y2+Y3+Y4+Y5+Y6,mean,var}' ${workdir}/output/${species}/U12_DonorSite.tmp > ${workdir}/output/${species}/U12_DonorSite_scored.tmp
 
-# Scale scores
+	# Scale scores
 
 	max=`awk -F"\t" '{max=0; for (i=1;i<=NF;i++) {if (max<$i) max=$i}; print max}' ${PWM} | awk 'BEGIN {sum=0} {sum+=$1} END {print sum}'`
 	min=`awk -F"\t" '{min=0; for (i=1;i<=NF;i++) {if (min>$i) min=$i}; print min}' ${PWM} | awk 'BEGIN {sum=0} {sum+=$1} END {print sum}'`
@@ -87,11 +87,11 @@
 
 ***Score U2 acceptor site***
 
-# Score acceptor site using LOD matrix
+	# Score acceptor site using LOD matrix
 
 	PWM=${workdir}/PWMs/Initial/${numSpecies}_Species-U2_AcceptorSite_LOD.tsv
 
-# Assign LOD for each nucleotide at each position
+	# Assign LOD for each nucleotide at each position
 
 	for Pos in {1..13}; do
 		for N in A C G T; do
@@ -101,11 +101,11 @@
 		done 
 	done
 
-# Extract acceptor site nucleotide positions from -13 to -1 at 3'ss for scoring
+	# Extract acceptor site nucleotide positions from -13 to -1 at 3'ss for scoring
 
 	awk -v OFS="\t" '{print (substr($3,1,1)),(substr($3,2,1)),(substr($3,3,1)),(substr($3,4,1)),(substr($3,5,1)),(substr($3,6,1)),(substr($3,7,1)),(substr($3,8,1)),(substr($3,9,1)),(substr($3,10,1)),(substr($3,11,1)),(substr($3,12,1)),(substr($3,13,1)),$1}' ${INPUT} > ${workdir}/output/${species}/U2_AcceptorSite.tmp
 
-# Score each position, sum LOD score, get mean, calculate variance
+	# Score each position, sum LOD score, get mean, calculate variance
 
 	awk -F"\t" -v OFS="\t" '{X1=$1; X2=$2; X3=$3; X4=$4; X5=$5; X6=$6; X7=$7; X8=$8; X9=$9; X10=$10; X11=$11; X12=$12; X13=$13}
 
@@ -125,22 +125,22 @@
 
 		{mean=(Y1+Y2+Y3+Y4+Y5+Y6+Y7+Y8+Y9+Y10+Y11+Y12+Y13)/13; var=((Y1-mean)**2+(Y2-mean)**2+(Y3-mean)**2+(Y4-mean)**2+(Y5-mean)**2+(Y6-mean)**2+(Y7-mean)**2+(Y8-mean)**2+(Y9-mean)**2+(Y10-mean)**2+(Y11-mean)**2+(Y12-mean)**2+(Y13-mean)**2)/13} {print $NF,$1$2$3$4$5$6$7$8$9$10$11$12$13,Y1+Y2+Y3+Y4+Y5+Y6+Y7+Y8+Y9+Y10+Y11+Y12+Y13,mean,var}' ${workdir}/output/${species}/U2_AcceptorSite.tmp > ${workdir}/output/${species}/U2_AcceptorSite_scored.tmp
 
-# Scale scores
+	# Scale scores
 
 	max=`awk -F"\t" '{max=0; for (i=1;i<=NF;i++) {if (max<$i) max=$i}; print max}' ${PWM} | awk 'BEGIN {sum=0} {sum+=$1} END {print sum}'`
 	min=`awk -F"\t" '{min=0; for (i=1;i<=NF;i++) {if (min>$i) min=$i}; print min}' ${PWM} | awk 'BEGIN {sum=0} {sum+=$1} END {print sum}'`
 
-# Scale, calculate mean, calculate variance
+	# Scale, calculate mean, calculate variance
 
 	awk -F"\t" -v OFS="\t" -v min=${min} -v max=${max} '{sum=$(NF-2); mean=$(NF-1); var=$NF} {if (sum<0) score=(sum-min)/(0-min)*50; else if (sum>0) score=(sum/max)*50+50; else score=50} {print $1,$2,score,mean,var}' ${workdir}/output/${species}/U2_AcceptorSite_scored.tmp | sort -k 1,1 > ${workdir}/output/${species}/Initial/U2_AcceptorSite_scaled.tsv
 
 ***Score U2 BPS***
 
-# Score U2 BPS using LOD matrix
+	# Score U2 BPS using LOD matrix
 
 	PWM=${workdir}/PWMs/Initial/${numSpecies}_Species-U2_BranchPoint_LOD.tsv
 
-# Assign LOD for each nucleotide at each position
+	# Assign LOD for each nucleotide at each position
 
 	for Pos in {1..7}; do
 		for N in A C G T; do
@@ -150,15 +150,15 @@
 		done 
 	done
 
-# Get sliding window from -44 to -4 at 3'ss
+	# Get sliding window from -44 to -4 at 3'ss
 
 	awk -F"\t" -v OFS="\t" '{print (substr($2,1,1)),(substr($2,2,1)),(substr($2,3,1)),(substr($2,4,1)),(substr($2,5,1)),(substr($2,6,1)),(substr($2,7,1)),(substr($2,8,1)),(substr($2,9,1)),(substr($2,10,1)),(substr($2,11,1)),(substr($2,12,1)),(substr($2,13,1)),(substr($2,14,1)),(substr($2,15,1)),(substr($2,16,1)),(substr($2,17,1)),(substr($2,18,1)),(substr($2,19,1)),(substr($2,20,1)),(substr($2,21,1)),(substr($2,22,1)),(substr($2,23,1)),(substr($2,24,1)),(substr($2,25,1)),(substr($2,26,1)),(substr($2,27,1)),(substr($2,28,1)),(substr($2,29,1)),(substr($2,30,1)),(substr($2,31,1)),(substr($2,32,1)),(substr($2,33,1)),(substr($2,34,1)),(substr($2,35,1)),(substr($2,36,1)),(substr($2,37,1)),(substr($2,38,1)),(substr($2,39,1)),(substr($2,40,1)),$1}' ${workdir}/output/${species}/${species}.${assembly}.${version}-Introns_3SS.fa > ${workdir}/output/${species}/U2_BranchPoint.tmp
 
-# Generate all potential 7 nt BPS from stretch
+	# Generate all potential 7 nt BPS from stretch
 
 	awk -F"\t" -v OFS="\t" '{n=NF-6} {for (i=1;i<n;i++) {print $i,$(i+1),$(i+2),$(i+3),$(i+4),$(i+5),$(i+6),$NF}}' ${workdir}/output/${species}/U2_BranchPoint.tmp > ${workdir}/output/${species}/U2_PotentialBPS.tmp
 
-# Accumulate each intron score from LOD score
+	# Accumulate each intron score from LOD score
 
 	awk -F"\t" -v OFS="\t" '{X1=$1; X2=$2; X3=$3; X4=$4; X5=$5; X6=$6; X7=$7}
 		{if (X1=="A") Y1='${A1}'; else if (X1=="C") Y1='${C1}'; else if (X1=="G") Y1='${G1}'; else if (X1=="T") Y1='${T1}'}
@@ -171,27 +171,27 @@
 
 		{mean=(Y1+Y2+Y3+Y4+Y5+Y6+Y7)/7; var=((Y1-mean)**2+(Y2-mean)**2+(Y3-mean)**2+(Y4-mean)**2+(Y5-mean)**2+(Y6-mean)**2+(Y7-mean)**2)/7} {print $NF,X1,X2,X3,X4,X5,X6,X7"::"mean"::"var,Y1+Y2+Y3+Y4+Y5+Y6+Y7}' ${workdir}/output/${species}/U2_PotentialBPS.tmp > ${workdir}/output/${species}/U2_PotentialBPS_scored.tmp
 
-# Extract the highest scoring BPS from each transcript
+	# Extract the highest scoring BPS from each transcript
 
 	key-merge ${workdir}/output/${species}/U2_PotentialBPS_scored.tmp > ${workdir}/output/${species}/U2_PotentialBPS_merged.tmp
 	awk -v OFS="\t" '{max=$9; n=(NF-1)/8; for (i=1;i<=n;i++) {j=i*8+1; if (max<=$j) {max=$j; max_i=j}}; print $(max_i-7),$(max_i-6),$(max_i-5),$(max_i-4),$(max_i-3),$(max_i-2),$(max_i-1),$1,max}' ${workdir}/output/${species}/U2_PotentialBPS_merged.tmp | awk -F"\t" -v OFS="\t" '{print $8,$1$2$3$4$5$6$7,$9}' | awk -F"\t|::" -v OFS="\t" '{print $1,$2,$5,$3,$4}' > ${workdir}/output/${species}/U2_HighestScoringBPS_scored.tmp
 
-# Determine max and min scores
+	# Determine max and min scores
 
 	max=`awk -F"\t" '{max=0; for (i=1;i<=NF;i++) {if (max<$i) max=$i}; print max}' ${PWM} | awk 'BEGIN {sum=0} {sum+=$1} END {print sum}'`
 	min=`awk -F"\t" '{min=0; for (i=1;i<=NF;i++) {if (min>$i) min=$i}; print min}' ${PWM} | awk 'BEGIN {sum=0} {sum+=$1} END {print sum}'`
 
-# Scale scores
+	# Scale scores
 
 	awk -F"\t" -v OFS="\t" -v min=${min} -v max=${max} '{sum=$(NF-2); mean=$(NF-1); var=$NF} {if (sum<0) score=(sum-min)/(0-min)*50; else if (sum>0) score=(sum/max)*50+50; else score=50} {print $1,$2,score,mean,var}' ${workdir}/output/${species}/U2_HighestScoringBPS_scored.tmp | sort -k 1,1 > ${workdir}/output/${species}/Initial/U2_BranchPoint_scaled.tsv
 
 ***Score U12 BPS***
 
-# Extract potential U12 BPS nucleotides from -40 to -1
+	# Extract potential U12 BPS nucleotides from -40 to -1
 
 	awk -F"\t" -v OFS="\t" '{print (substr($4,1,1)),(substr($4,2,1)),(substr($4,3,1)),(substr($4,4,1)),(substr($4,5,1)),(substr($4,6,1)),(substr($4,7,1)),(substr($4,8,1)),(substr($4,9,1)),(substr($4,10,1)),(substr($4,11,1)),(substr($4,12,1)),(substr($4,13,1)),(substr($4,14,1)),(substr($4,15,1)),(substr($4,16,1)),(substr($4,17,1)),(substr($4,18,1)),(substr($4,19,1)),(substr($4,20,1)),(substr($4,21,1)),(substr($4,22,1)),(substr($4,23,1)),(substr($4,24,1)),(substr($4,25,1)),(substr($4,26,1)),(substr($4,27,1)),(substr($4,28,1)),(substr($4,29,1)),(substr($4,30,1)),(substr($4,31,1)),(substr($4,32,1)),(substr($4,33,1)),(substr($4,34,1)),(substr($4,35,1)),(substr($4,36,1)),(substr($4,37,1)),(substr($4,38,1)),(substr($4,39,1)),(substr($4,40,1)),$1}' ${INPUT} > ${workdir}/output/${species}/U12_BranchPoint.tmp
 
-# Generate potential 12nt BPS using a sliding window
+	# Generate potential 12nt BPS using a sliding window
 
 	awk -F"\t" -v OFS="\t" '{n=NF-11} {for (i=1;i<n;i++) {print $i,$(i+1),$(i+2),$(i+3),$(i+4),$(i+5),$(i+6),$(i+7),$(i+8),$(i+9),$(i+10),$(i+11),$NF}}' ${workdir}/output/${species}/U12_BranchPoint.tmp > ${workdir}/output/${species}/U12_PotentialBPS.tmp
 
