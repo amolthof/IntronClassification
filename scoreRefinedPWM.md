@@ -510,6 +510,7 @@
 	done
 
 ***Combine splice site scores to one file***
+	
 	# Merge scores
 
 	for type in U2_DonorSite_11nt U12_DonorSite_11nt U2_AcceptorSite U2_BranchPoint U12_BranchPoint; do
