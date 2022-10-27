@@ -30,6 +30,7 @@
 	awk -F"\t" -v OFS="\t" '{U2=$3; U12=$5; PPT=$7; BPS=$11; if (BPS>=80) print $0":strong_BPS"; else if (BPS>=60) print $0":weak_BPS"; else if (BPS<=50 && PPT>=70) print $0":minor_hybrid"; else print $0":degenerate_minor"}' ${workdir}/output/${species}/non-canonical_introns_binned_1.tmp > ${workdir}/output/${species}/non-canonical_introns_binned_2.tmp
 
 ***Make final binning calls***
+
 	# FIELDS: intron_id, 5'ss, U2 5'ss score, 5'ss, U12 5'ss score, 3'ss, U2 3'ss score, U2 BPS, U2 BPS score, U12 BPS, U12 BPS score, term dint, 5'ss class, 3'ss class + final call
 
 	awk -F"\t" -v OFS="\t" '{if (($13=="strong_major" || $13=="major") && ($14=="strong_PPT" || $14=="weak_PPT")) print $0,"major"; else if (($13=="strong_major" || $13=="major") && $14=="major_hybrid") print $0,"major_hybrid"; else print $0,"major-like"}' ${workdir}/output/${species}/U2_introns_binned.tmp > ${workdir}/output/${species}/introns_binned.tmp
