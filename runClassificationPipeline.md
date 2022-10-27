@@ -94,14 +94,82 @@ ___
 
 **PART 3: merge initial PWMs across species**
 
-	if [ ! -s ${DIR}/PWMs/Initial/${numSpecies}_Species-U2_DonorSite_LOD.tsv ]; then
+	if [ ! -s ${workdir}/PWMs/Initial/${numSpecies}_Species-U2_DonorSite_LOD.tsv ]; then
 		echo ""
 		echo "PART 3: Generating initial PWMs across ${numSpecies} species |" `date`
 		echo ""
 
-		${DIR}/bin/mergePWMs_1.sh ${DIR} ${SpeciesList} 
+		${workdir}/bin/mergePWMs_1.sh ${workdir} ${SpeciesList} 
 	else
 		echo ""
 		echo "PART 3: Initial PWMs already generated |" `date`
 		echo ""
 	fi
+
+**PART 4: initial scoring & BPS extraction**
+
+	for i in `seq 1 ${numSpecies}`; do
+		species=`cut -f 1 ${SpeciesList} | head -n ${i} | tail -n 1`
+		assembly=`cut -f 2 ${SpeciesList} | head -n ${i} | tail -n 1`
+		version=`cut -f 3 ${SpeciesList} | head -n ${i} | tail -n 1`
+
+		if [ ! -d ${workdir}/output/${species}/Initial ]; then
+			if [ ${i} -eq 1 ]; then
+				echo ""
+				echo "PART 4: Scoring introns against initial PWMs |" `date`
+				echo ""
+			fi
+
+			mkdir ${workdir}/output/${species}/Initial
+			${workdir}/bin/scoreInitialPWMs.sh ${workdir} ${SpeciesList} ${species} ${assembly} ${version} &
+
+			if [ ${i} -eq ${numSpecies} ]; then
+				echo ""
+				echo "EXITING: Re-run RunClassificationPipeline.sh when scoreInitialPWMs.sh is complete across all species |" `date`
+				echo ""
+				exit
+			fi
+		else
+			echo ""
+			echo "PART 4: Initial scoring complete |" `date`
+			echo ""
+			break
+		fi
+	done
+
+**PART 6: merge refined PWMs across species**
+
+	if [ ! -s ${workdir}/PWMs/${numSpecies}_Species-U2_GT-AG_DonorSite_LOD.tsv ]; then
+		echo ""
+		echo "PART 6: Merge PWMs across species |" `date`
+		echo ""
+		
+		nice -n 19 ${workdir}/bin/mergePWMs_2.sh ${workdir} ${SpeciesList} &> ${workdir}/PipelineCalibration/mergePWMs_2.log &
+	else
+		echo ""
+		echo "PART 6: Refined PWMs already generated |" `date`
+		echo ""
+	fi
+
+**PART 7: Score and bin all introns against refined PWMs**
+
+	echo ""
+	echo "PART 7: Deploy ${numSpecies} for scoring & binning against PWMs |" `date`
+	echo ""
+
+	for i in `seq 1 ${numSpecies}`; do
+		species=`cut -f 1 ${SpeciesList} | head -n ${i} | tail -n 1`
+		assembly=`cut -f 2 ${SpeciesList} | head -n ${i} | tail -n 1`
+		version=`cut -f 3 ${SpeciesList} | head -n ${i} | tail -n 1`
+		
+		if [ ! -s ${workdir}/output/${species}/introns_binned.tsv ]; then
+			echo "Deploying species ${i} of ${numSpecies}: ${species}"
+			${workdir}/bin/processSpecies.sh ${workdir} ${SpeciesList} ${species} ${assembly} ${version} &
+		else
+			echo "Species ${i} of ${numSpecies}: ${species} - already processed"
+		fi
+	done
+
+	echo ""
+	echo "INTRON CLASSIFICATION PIPELINE FULLY DEPLOYED |" `date`
+	echo ""
