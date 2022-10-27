@@ -11,11 +11,39 @@ ___
 
 [splice-site-generation.md](splice-site-generation.md)
 
-This is a bash markdown document for extraction splice site sequences from introns.
+This is a bash markdown document for the intron classification pipeline that calls all other required scripts.
 
-[generateInitialPWM.md](generateInitialPWM.md)
+[extract-U2BPS.md](extract-U2BPS.md)
 
-This is a bash markdown document for generating initial position-weight matrices.
+This is a bash markdown document for the extraction of splice site sequences from intron FASTA files.
+
+[getNucleotideCounts_1.md](getNucleotideCounts_1.md)
+
+This is a bash markdown document for the initial binning of introns by terminal dinucleotide sequences.
+
+[mergePWM_1.md](mergePWM_1.md)
+
+This is a bash markdown document for the generation of initial position-weight matrices.
+
+[scoreInitialPWM.md](scoreInitialPWM.md)
+
+This is a bash markdown document for the scoring of introns against the initial position-weight matrices.
+
+[getNucleotideCounts_2.md](getNucleotideCounts_2.md)
+
+This is a bash markdown document for the binning of introns based on the initial PWM scores.
+
+[mergePWM_2.md](mergePWM_2.md)
+
+This is a bash markdown document for the generation of refined position-weight matrices.
+
+[scoreRefinedPWM.md](scoreRefinedPWM.md)
+
+This is a bash markdown document for the scoring of introns against the refined position-weight matrices.
+
+[binIntrons_afterScoring.md](binIntrons_afterScoring.md)
+
+This is a bash markdown document for the binning of introns based on the refined PWM scores.
 
 [scripts](scripts)
 
