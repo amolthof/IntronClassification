@@ -10,11 +10,13 @@
 	IntronFASTA=${workdir}/output/${species}/${species}.${assembly}.${version}-Introns_3SS.fa
 
 ***Bin introns by terminal dinucleotide sequence***
+	
 	# Subtype introns by terminal dinucleotides: group GT.GC-AG introns and AT-AC introns
 	awk -F"\t" -v OFS="\t" '{d=substr($2,4,2); a=substr($3,12,2); if ((d=="GT" || d=="GC") && a=="AG") print $0}' ${INPUT} > ${workdir}/output/${species}/GT.GC-AG_introns.tmp
 	awk -F"\t" -v OFS="\t" '{d=substr($2,4,2); a=substr($3,12,2); if (d=="AT" && a=="AC") print $0}' ${INPUT} > ${workdir}/output/${species}/AT-AC_introns.tmp
 
 ***Obtain Nucleotide counts for generation of PWM***
+	
 	# PWM 1: Get putative major 5'ss, -2 to +6, 8nt sequence from GT.GC-AG introns
 	awk -F"\t" -v OFS="\t" '{print (substr($2,2,1)),(substr($2,3,1)),(substr($2,4,1)),(substr($2,5,1)),(substr($2,6,1)),(substr($2,7,1)),(substr($2,8,1)),(substr($2,9,1))}' ${workdir}/output/${species}/GT.GC-AG_introns.tmp > ${workdir}/output/${species}/GT.GC-AG_DonorSite.tmp
 
