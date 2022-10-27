@@ -91,3 +91,17 @@ ___
 		echo "PART 2: GT.GC-AG/AT-AC splice-site nucleotides already counted |" `date`
 		echo ""
 	fi
+
+**PART 3: merge initial PWMs across species**
+
+	if [ ! -s ${DIR}/PWMs/Initial/${numSpecies}_Species-U2_DonorSite_LOD.tsv ]; then
+		echo ""
+		echo "PART 3: Generating initial PWMs across ${numSpecies} species |" `date`
+		echo ""
+
+		${DIR}/bin/mergePWMs_1.sh ${DIR} ${SpeciesList} 
+	else
+		echo ""
+		echo "PART 3: Initial PWMs already generated |" `date`
+		echo ""
+	fi
