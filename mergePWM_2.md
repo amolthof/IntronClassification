@@ -1,4 +1,4 @@
-***Set inputs: working workdirectory, source workdirectory, list of species in source***
+***Set inputs: working directory, list of species in source***
 
 	workdir=$1	
 	SpeciesList=$2
@@ -13,17 +13,17 @@
 
 			if [ ! -s ${workdir}/PWMs/NucleotideCounts/${species}-${type}.tsv ]; then
 				if [ -s ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tsv ]; then
-					echo "${type} ${t} PWM total count + ${species} consensus (NULL):"  `${workdir}/bin/getConsensus.sh ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tsv` "[${i} of ${numSpecies}]"
+					echo "${type} PWM total count + ${species} consensus (NULL):"  `${workdir}/bin/getConsensus.sh ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tsv` "[${i} of ${numSpecies}]"
 				else
-					echo "${type} ${t} PWM total count (NULL) + ${species} consensus (NULL):" "NULL" "[${i} of ${numSpecies}]"
+					echo "${type} PWM total count (NULL) + ${species} consensus (NULL):" "NULL" "[${i} of ${numSpecies}]"
 				fi
 			elif [ -s ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tsv ]; then
 				paste ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tsv ${workdir}/PWMs/NucleotideCounts/${species}-${type}.tsv | awk -F"\t" -v OFS="\t" '{print $1+$5,$2+$6,$3+$7,$4+$8}' > ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tmp
 				mv ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tmp ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tsv
-		 		echo "${type} ${t} PWM total count + ${species} consensus:"  `${workdir}/bin/getConsensus.sh ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tsv` "[${i} of ${numSpecies}]"
+		 		echo "${type} PWM total count + ${species} consensus:"  `${workdir}/bin/getConsensus.sh ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tsv` "[${i} of ${numSpecies}]"
 			else
 				cp ${workdir}/PWMs/NucleotideCounts/${species}-${type}.tsv ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tsv
-				echo "${type} ${t} PWM total count (NULL) + ${species} consensus:" `${workdir}/bin/getConsensus.sh ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tsv` "[${i} of ${numSpecies}]"
+				echo "${type} PWM total count (NULL) + ${species} consensus:" `${workdir}/bin/getConsensus.sh ${workdir}/PWMs/NucleotideCounts/${numSpecies}_Species-${type}.tsv` "[${i} of ${numSpecies}]"
 			fi
 		done
 
@@ -34,7 +34,7 @@
 		awk -F"\t" -v OFS="\t" -v base=0.25 '{A=(log($1/base)/log(2)); C=(log($2/base)/log(2)); G=(log($3/base)/log(2)); T=(log($4/base)/log(2)); print A, C, G, T}' ${workdir}/PWMs/${numSpecies}_Species-${type}_freq.tsv > ${workdir}/PWMs/${numSpecies}_Species-${type}_LOD.tsv
 		
 		echo ""
-		echo "${type} ${t} PWM total LOD:" `${workdir}/bin/getConsensus.sh ${workdir}/PWMs/${numSpecies}_Species-${type}_LOD.tsv` "[${i} of ${numSpecies}]"
+		echo "${type} PWM total LOD:" `${workdir}/bin/getConsensus.sh ${workdir}/PWMs/${numSpecies}_Species-${type}_LOD.tsv` "[${i} of ${numSpecies}]"
 		echo ""
 		
 		PWM=${workdir}/PWMs/${numSpecies}_Species-${type}_LOD.tsv
