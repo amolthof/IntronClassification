@@ -9,42 +9,37 @@ Scripts for the classification of introns into major, major-like, hybrid, minor-
 *<sup>1</sup>Physiology and Neurobiology Department, University of Connecticut, Storrs, CT, 06269, USA*<br>*<sup>2</sup>Current address: Institutite for Cellular and Molecular Medicine, University of Copenhagen, Copenhagen, Denmark*<br>*<sup>3</sup>Department of Poultry and Aquaculture, Institute of Animal Science, Agricultural Research Organization, Rishon LeTsiyon, Israel*<br>*<sup>4</sup>Walter and Eliza Hall Institute of Medical Research, Parkville, VIC 3052, Australia*<br>*<sup>5</sup>Institute of Systems Genomics, University of Connecticut, Storrs, CT, 06269, USA*
 ___
 
-[splice-site-generation.md](splice-site-generation.md)
+*INTRODUCTION*
 
-This is a bash markdown document for the intron classification pipeline that calls all other required scripts.
+The Intron Classification Pipeline is a suite of scripts for classifying introns into major, major-like, hybrid, minor-like, and minor bins. This pipeline is designed to facilitate the study of intron taxonomy, their evolution, and the role of minor introns in stress response, as detailed in Olthof and Schwoerer 2023. 
 
-[extract-U2BPS.md](extract-U2BPS.md)
+*DEPENDENCIES:*
 
-This is a bash markdown document for the extraction of splice site sequences from intron FASTA files.
+1. GNU's awk
+2. bedtools (to generate IntronFASTAs)
+3. python3 (to parse genome annotation)
 
-[getNucleotideCounts_1.md](getNucleotideCounts_1.md)
+*INSTALLATION:*
 
-This is a bash markdown document for the initial binning of introns by terminal dinucleotide sequences.
+`git clone <github URL>`
 
-[mergePWM_1.md](mergePWM_1.md)
+*USAGE:*
 
-This is a bash markdown document for the generation of initial position-weight matrices.
+`bash bin/RunClassificationPipeline.sh`
 
-[scoreInitialPWM.md](scoreInitialPWM.md)
+*WORKFLOW:*
 
-This is a bash markdown document for the scoring of introns against the initial position-weight matrices.
+1. Extract intron FASTA sequences from all species in MIDB_v2.0-SpeciesList.tsv (generates IntronFASTAs)
+2. Generate initial PWMs using introns from 263 species (generates PWMs/Initial)
+3. Scoring: Score introns using the initial PWMs (generates output/${species}/Initial)
+4. Generate refined PWMs using introns from 263 species (generates PWMs/$(t})
+5. Classify introns (generates output/${species}/${t})
 
-[getNucleotideCounts_2.md](getNucleotideCounts_2.md)
+Please note that each time `RunClassificationPipeline.sh` is called, it will go through each step, check to see if the output directory exists, and responds accordingly. Thus, to bypass computationally heavy steps (such as FASTA or PWM generation) simply extract the corresponding directory from the compressed_files directory. In order to classify an additional species, add that species to MIDB_v2.0-SpeciesList.tsv.
 
-This is a bash markdown document for the binning of introns based on the initial PWM scores.
+*CONTACT*
 
-[mergePWM_2.md](mergePWM_2.md)
+For queries or assistance with the pipeline, please contact:
 
-This is a bash markdown document for the generation of refined position-weight matrices.
-
-[scoreRefinedPWM.md](scoreRefinedPWM.md)
-
-This is a bash markdown document for the scoring of introns against the refined position-weight matrices.
-
-[binIntrons_afterScoring.md](binIntrons_afterScoring.md)
-
-This is a bash markdown document for the binning of introns based on the refined PWM scores.
-
-[scripts](scripts)
-
-This directory contains plain script versions of the markdown documents.	
+Anouk M. Olthof: anouk.olthof@uconn.edu
+Charles F. Schwoerer: charles.schwoerer@columbia.edu
