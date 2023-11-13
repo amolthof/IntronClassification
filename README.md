@@ -32,10 +32,12 @@ The Intron Classification Pipeline is a suite of scripts for classifying introns
 1. Extract intron FASTA sequences from all species in MIDB_v2.0-SpeciesList.tsv (generates IntronFASTAs)
 2. Generate initial PWMs using introns from 263 species (generates PWMs/Initial)
 3. Scoring: Score introns using the initial PWMs (generates output/${species}/Initial)
-4. Generate refined PWMs using introns from 263 species (generates PWMs/$(t})
-5. Classify introns (generates output/${species}/${t})
+4. Generate 169 titrated PWMs using introns from 263 species (generates PWMs/$(t})
+5. Calculate precision/recall based using responsive introns in PipelineCalibration
+6. Select the optimum titration by maximizing the average F1 score across species
+7. Classify introns based on the selected titration (generates output/${species}/${t})
 
-Please note that each time `RunClassificationPipeline.sh` is called, it will go through each step, check to see if the output directory exists, and responds accordingly. Thus, to bypass computationally heavy steps (such as FASTA or PWM generation) simply extract the corresponding directory from the compressed_files directory. In order to classify an additional species, add that species to MIDB_v2.0-SpeciesList.tsv.
+Please note that each time `RunClassificationPipeline.sh` is called, it will go through each step, check to see if the output directory exists, and responds accordingly. Thus, to bypass computationally heavy steps (such as FASTA or PWM generation) one can extract the corresponding files from FigShare: https://figshare.com/projects/Taxonomy_of_introns_and_the_evolution_of_minor_introns/167411. In order to classify an additional species, add that species to MIDB_v2.0-SpeciesList.tsv.
 
 *CONTACT*
 
